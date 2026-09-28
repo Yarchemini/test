@@ -1,5 +1,7 @@
+from typing import Any
 import pytest
 from src.decorators import log
+
 
 
 def test_log_console_success(capsys: pytest.CaptureFixture[str]) -> None:
