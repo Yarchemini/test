@@ -4,17 +4,17 @@ from src.external_api import convert_to_rub
 
 
 def test_convert_to_rub_ruble() -> None:
-    """Тест транзакции, которая изначально в рублях (конвертация не требуется)."""
+    """Тест транзакции, которая изначально в рублях."""
     transaction = {"operationAmount": {"amount": "150.00", "currency": {"code": "RUB"}}}
     assert convert_to_rub(transaction) == 150.0
 
 
 def test_convert_to_rub_usd_success() -> None:
-    """Тест успешного ответа от внешнего API при конвертации из USD."""
+    """Тест успешного ответа от API с курсом валюты."""
     transaction = {"operationAmount": {"amount": "100.00", "currency": {"code": "USD"}}}
     mock_response = Mock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {"result": 7500.0}
+    mock_response.json.return_value = {"rates": {"RUB": 75.0}}
 
     with patch("requests.get", return_value=mock_response):
         assert convert_to_rub(transaction) == 7500.0
