@@ -1,20 +1,44 @@
+import logging
+import os
+
+# Создаем папку logs в корне, если её нет
+os.makedirs("logs", exist_ok=True)
+
+# Настройка логера для модуля masks
+logger = logging.getLogger("masks")
+logger.setLevel(logging.DEBUG)
+
+file_handler = logging.FileHandler(os.path.join("logs", "masks.log"), mode="w", encoding="utf-8")
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+
+
 def get_mask_card_number(card_number: str) -> str:
-    """Функция, которая маскирует номера банковской карты."""
-    if not card_number.isdigit() or len(card_number) != 16:
-        return "Неверный формат карты"
+    """Маскирует номер карты в формат XXXX XX** **** XXXX."""
+    logger.debug(f"Начало маскирования номера карты: {card_number}")
 
-    # Формат маски: XXXX XX** **** XXXX
-    part1 = card_number[:4]
-    part2 = card_number[4:6]
-    part4 = card_number[12:]
+    clean_number = card_number.replace(" ", "")
 
-    return f"{part1} {part2}** **** {part4}"
+    if not clean_number.isdigit() or len(clean_number) != 16:
+        logger.error(f"Некорректный номер карты: '{card_number}'. Должно быть 16 цифр.")
+        return "Неверный формат карты"  # Вернули старую строчку для теста
+
+    masked = f"{clean_number[:4]} {clean_number[4:6]}** **** {clean_number[12:]}"
+    logger.info("Номер карты успешно замаскирован.")
+    return masked
 
 
 def get_mask_account(account_number: str) -> str:
-    """Функция для маскировки номера банковского счета."""
-    if not account_number.isdigit() or len(account_number) < 4:
-        return "Неверный формат счета"
+    """Маскирует номер счета в формат **XXXX."""
+    logger.debug(f"Начало маскирования номера счета: {account_number}")
 
-    # Маскируем так, чтобы были видны только последние 4 цифры, перед ними две звездочки
-    return f"**{account_number[-4:]}"
+    clean_account = account_number.replace(" ", "")
+
+    if not clean_account.isdigit() or len(clean_account) < 4:
+        logger.error(f"Некорректный номер счета: '{account_number}'. Должно быть минимум 4 цифры.")
+        return "Неверный формат счета"  # Вернули старую строчку для теста
+
+    masked = f"**{clean_account[-4:]}"
+    logger.info("Номер счета успешно замаскирован.")
+    return masked
