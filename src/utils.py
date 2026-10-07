@@ -10,8 +10,11 @@ os.makedirs("logs", exist_ok=True)
 logger = logging.getLogger("utils")
 logger.setLevel(logging.DEBUG)
 
-file_handler = logging.FileHandler(os.path.join("logs", "utils.log"), mode="w", encoding="utf-8")
-file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+log_path = os.path.join("logs", "utils.log")
+file_handler = logging.FileHandler(log_path, mode="w", encoding="utf-8")
+file_formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
@@ -28,13 +31,21 @@ def read_json_file(file_path: str) -> list[dict[str, Any]]:
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
             if isinstance(data, list):
-                logger.info(f"Файл {file_path} успешно прочитан. Найдено транзакций: {len(data)}")
+                logger.info(
+                    f"Файл {file_path} успешно прочитан. "
+                    f"Найдено транзакций: {len(data)}"
+                )
                 return data
-            logger.error(f"Файл {file_path} содержит не список, а {type(data).__name__}")
+            logger.error(
+                f"Файл {file_path} содержит не список, "
+                f"а {type(data).__name__}"
+            )
             return []
     except json.JSONDecodeError as e:
         logger.error(f"Ошибка декодирования JSON в файле {file_path}: {e}")
         return []
     except OSError as e:
-        logger.error(f"Ошибка ввода-вывода при работе с файлом {file_path}: {e}")
+        logger.error(
+            f"Ошибка ввода-вывода при работе с файлом {file_path}: {e}"
+        )
         return []
