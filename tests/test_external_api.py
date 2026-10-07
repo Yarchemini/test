@@ -14,10 +14,11 @@ def test_convert_to_rub_usd_success() -> None:
     transaction = {"operationAmount": {"amount": "100.00", "currency": {"code": "USD"}}}
     mock_response = Mock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {"rates": {"RUB": 75.0}}
+    # Имитируем ответ относительно базовой EUR
+    mock_response.json.return_value = {"rates": {"RUB": 80.0, "USD": 1.0}}
 
     with patch("requests.get", return_value=mock_response):
-        assert convert_to_rub(transaction) == 7500.0
+        assert convert_to_rub(transaction) == 8000.0
 
 
 def test_convert_to_rub_api_error() -> None:
