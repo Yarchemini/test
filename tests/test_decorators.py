@@ -3,7 +3,6 @@ import pytest
 from src.decorators import log
 
 
-
 def test_log_console_success(capsys: pytest.CaptureFixture[str]) -> None:
     """Тест успешного выполнения функции с выводом лога в консоль."""
 

@@ -32,4 +32,3 @@ def test_sort_by_date_ascending(sample_transactions: list[dict]) -> None:
     sorted_data = sort_by_date(sample_transactions, reverse=False)
     assert sorted_data[0]["id"] in [2, 5]  # Самые старые первыми
     assert sorted_data[-1]["id"] == 4  # Самая свежая последняя
-
